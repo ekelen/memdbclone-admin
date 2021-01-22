@@ -2,7 +2,7 @@
   "name": "with-mongodb",
   "version": "0.1.0",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
@@ -10,7 +10,9 @@
     "dayjs": "^1.9.7",
     "dotenv": "^8.2.0",
     "form-data": "^3.0.0",
+    "inquirer": "^7.3.3",
     "lodash.first": "^3.0.0",
+    "lodash.range": "^3.2.0",
     "mongodb": "^3.6.3",
     "node-fetch": "^2.6.1"
   },

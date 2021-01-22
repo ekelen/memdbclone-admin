@@ -2,7 +2,7 @@ const path = require("path");
 require("dotenv").config({
   path: path.join(__dirname, ".env.local"),
 });
-const { MongoClient } = require("mongodb");
+const { MongoClient, MongoError } = require("mongodb");
 
 const { MONGODB_URI, MONGODB_DB } = process.env;
 
@@ -23,6 +23,7 @@ if (!MONGODB_DB) {
  * in development. This prevents connections growing exponentiatlly
  * during API Route usage.
  */
+
 let cached = global.mongo;
 if (!cached) cached = global.mongo = {};
 
@@ -48,4 +49,4 @@ async function connectToDatabase() {
   return cached.conn;
 }
 
-module.exports.connectToDatabase = connectToDatabase;
+module.exports = { connectToDatabase };
