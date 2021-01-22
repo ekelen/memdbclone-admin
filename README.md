@@ -6,10 +6,50 @@ This project provides only scripts to scrape the site's results pages, clean the
 
 A seperate repository is under construction to support a browser-based production UI, similar to Rutgers' with some UX improvements.
 
-Short-term TODO:
+## Short-term TODO:
 
 - Usage guide
+- Link simple search interface in this doc
+- Add About section for each collection
+- (Open to gql queries?)
 - Scrape other databases in the bank
+
+  - [ ] Currency Exchanges (Mueller)
+  - [ ] Currency Exchanges (Metz)
+  - [x] Currency Exchanges (Spufford)
+  - [x] Prices (Posthumus)
+  - [ ] Prices (Metz)
+  - [ ] Prices and Wages (Munro)
+    - [ ] `wages.xls`
+    - [ ] `coinage.xls`
+    - [ ] `brabant_comm.xsl`
+    - [ ] `textile_prod.xls`
+    - [ ] `vanderwee.xls`
+    - [ ] `bruges_wool.xls`
+    - [ ] `ghent_wool.xls`
+    - [ ] `ghent_wool1.xls`
+    - [ ] `flanders_basket.xls`
+    - [ ] `oxford_cloth.xls`
+    - [ ] `eng_comm.xls`
+    - [ ] `EngBasketPrices.xls` - only:
+      - [ ] Annual
+      - [ ] Wage5YrMeans
+    - [ ] `pbh_index.xls`
+    - [ ] `WagesPricesAntwerpEngl.xls`
+    - [ ] `fland_drape.xls`
+    - [ ] `ghent_cloth.xls`
+    - [ ] `ghent_drape.xls`
+    - [ ] `ghent_drape1.xls`
+    - [ ] `leiden_wool.xls`
+    - [ ] `ypres_farm.xls`
+    - [ ] `ypres_stats.xls`
+    - [ ] `ypres_drape.xls`
+    - [ ] `ypres_stall.xls`
+    - [ ] `ypres_stats1.xls`
+    - [ ] `ypres_wool.xls`
+    - [ ] `mech_woool.xls`
+    - [ ] `erasmus_income.xls`
+    - [ ] `kortrijk_linen.xls`
 
 ## Schemas
 

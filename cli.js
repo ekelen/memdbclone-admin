@@ -1,7 +1,8 @@
 "use strict";
 const inquirer = require("inquirer");
 const passwordPrompt = require("./auth.js");
-const { updateFromTextFile, scrapePageToTextFile } = require("./onHydrate");
+const { updateFromTextFile } = require("./onHydrate");
+const { scrapePageToTextFile } = require("./download.js");
 const { cleanRecord } = require("./transform.js");
 const range = require("lodash/range");
 const fs = require("fs");
