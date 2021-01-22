@@ -5,7 +5,9 @@ const addToDb = require("./addToDb");
 /**
  * @desc Parses and replaces/inserts lines of CSV data downloaded from Rutgers
  * @param  {int} offset - which record to start at
- * @param  {string} rutgersTableName - value for Rutgers' 'table' param
+ * @param  {string} textFile - path of local text file
+ * @param  {MongoClient.Db.Collection} collection - collection to insert into
+ * @param  {csv.parse.Options.onRecord} onRecord - function to clean a record
  *
  * @throws {Error} is possible
  */

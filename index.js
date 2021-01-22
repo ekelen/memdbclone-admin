@@ -7,8 +7,14 @@ const cli = require("./cli.js");
 const run = async () => {
   try {
     const { db } = await connectToDatabase();
+    const fs = require("fs");
+    const path = require("path");
+    const dstDir = path.join(__dirname, "data", "scraped");
+    if (!fs.existsSync(dstDir)) {
+      fs.mkdirSync(dstDir);
+    }
     logging.print(`DB Connection OK:`, !!db);
-    await cli({ db });
+    await cli({ db, dstDir });
   } catch (e) {
     console.log(`⚠️ Error launching:`, e);
     process.exit(1);

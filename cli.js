@@ -1,12 +1,10 @@
 "use strict";
 const inquirer = require("inquirer");
 const passwordPrompt = require("./auth.js");
-const { updateFromTextFile } = require("./onHydrate");
+const { updateFromTextFile } = require("./upload");
 const { scrapePageToTextFile } = require("./download.js");
 const { cleanRecord } = require("./transform.js");
 const range = require("lodash/range");
-const fs = require("fs");
-const path = require("path");
 
 const RECORDS_PER_PAGE = 1000;
 const SOURCE_PAGES = {
@@ -28,12 +26,9 @@ const onHydrate = ({
   collectionName = "spuffordCurrency",
   verbose = false,
   nPagesToSkip = 0,
+  dstDir,
 }) => async ({ db }) => {
   try {
-    const dstDir = path.join(__dirname, "data", "scraped");
-    if (!fs.existsSync(dstDir)) {
-      fs.mkdirSync(dstDir);
-    }
     const collection = await db.collection(collectionName);
     const onRecord = cleanRecord[collectionName];
     const hydrateResults = await Promise.all(
@@ -102,7 +97,8 @@ const retrieveValidator = ({ collectionName = "spuffordCurrency" }) => async ({
   }
 };
 
-const getUniquePlaces = async ({ db }) => {
+// todo: refactor to get distinct whatever
+const getDistinctPlacesSpuf = async ({ db }) => {
   try {
     const collection = await db.collection("spuffordCurrency");
     const results = await collection.distinct("Place");
@@ -112,7 +108,7 @@ const getUniquePlaces = async ({ db }) => {
   }
 };
 
-const getUniqueCurrencyNames = async ({ db }) => {
+const getDistinctCurrenciesSpuf = async ({ db }) => {
   try {
     const collection = await db.collection("spuffordCurrency");
     const currFrom = await collection.distinct("Currency (From)");
@@ -131,12 +127,13 @@ const handleLog = ({ cb }) => async ({ db }) => {
   return true;
 };
 
-const continueCli = async ({ db }) => {
+const continueCli = async ({ db, dstDir }) => {
   return await inquirer
     .prompt({
       type: "list",
       name: "actions",
       message: "Choose action:",
+      loop: false,
       choices: [
         {
           name: "Hydrate spuffordCurrency collection from Rutgers",
@@ -146,8 +143,8 @@ const continueCli = async ({ db }) => {
           name: "Hydrate posthumusPrices collection from Rutgers",
           disabled: "posthumusPrices is current as of 2020-01-21",
         },
-        "Get memdbclone Spufford Currency validation schema",
-        "Get memdbclone Posthumus Prices validation schema",
+        "Get Currency (Spufford) validation schema",
+        "Get Prices (Posthumus) validation schema",
         "Scrape 1 page from Posthumus Price",
         "Get distinct Spufford Currency currency names",
         "Get distinct Spufford Currency place names",
@@ -172,6 +169,7 @@ const continueCli = async ({ db }) => {
               rutgersTableName: "postpr",
               collectionName: "posthumusPrices",
               pagesToSkip: 0,
+              dstDir,
             }),
           });
           break;
@@ -180,24 +178,25 @@ const continueCli = async ({ db }) => {
             cb: scrapePageToTextFile({
               offset: 1,
               rutgersTableName: "postpr",
+              dstDir,
             }),
           });
           break;
-        case "Get spuffordCurrency validation schema":
+        case "Get Currency (Spufford) validation schema":
           handler = handleLog({
             cb: retrieveValidator({ collectionName: "spuffordCurrency" }),
           });
           break;
-        case "Get Posthumus Prices validation schema":
+        case "Get Prices (Posthumus) validation schema":
           handler = handleLog({
             cb: retrieveValidator({ collectionName: "posthumusPrices" }),
           });
           break;
         case "Get distinct Spufford Currency place names":
-          handler = handleLog({ cb: getUniquePlaces });
+          handler = handleLog({ cb: getDistinctPlacesSpuf });
           break;
         case "Get distinct Spufford Currency currency names":
-          handler = handleLog({ cb: getUniqueCurrencyNames });
+          handler = handleLog({ cb: getDistinctCurrenciesSpuf });
           break;
         case "Quit":
           handler = onQuit;
@@ -206,10 +205,12 @@ const continueCli = async ({ db }) => {
           handler = onQuit;
           break;
       }
-      return handler({ db }).then(() => continueCli({ db }));
+      return handler({ db }).then(() => continueCli({ db, dstDir }));
     });
 };
 
-module.exports = ({ db = null }) => {
-  return inquirer.prompt(passwordPrompt).then(() => continueCli({ db }));
+module.exports = ({ db = null, dstDir }) => {
+  return inquirer
+    .prompt(passwordPrompt)
+    .then(() => continueCli({ db, dstDir }));
 };
